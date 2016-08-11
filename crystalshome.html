@@ -1,0 +1,195 @@
+<html>
+<head>
+<title>Crystal's Corner</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
+<script src="http://wacomalt.com/altvr/dist/altspace.min.js"></script>
+</head>
+<body>
+<script>
+if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+
+var scene = new THREE.Scene();
+var renderer = altspace.getThreeJSRenderer();
+var models = ["doortall", "water", "flooring", "litterbox", "litter", "flooringcap", "stairs", "htfloorbedroom", "pooldonut", "ducky"];
+var animateTick = 0;
+//var poolDonutBasePosition = [0, 0, 0];
+var poolDonutBasePosition = [-4.924, -2.635, 7.806];
+var duckyBasePosition = [-5.5, -2.636, 1.349];
+var sceneloaded = false;
+
+// a function in brackets is self invoking. it will run first
+(function setup(){
+	altspace.getEnclosure().then(function(enclosure){
+		scale = enclosure.pixelsPerMeter;
+		scene.scale.set(scale,scale,scale);
+		main(); // .then is called once it has the enclosure info. so we move onto main() once it has the pixels per meter
+	});
+})();
+
+function main(){
+	(function loadModels(){ // another self invoking function. will load the models first
+		var multiloader = altspace.utilities.multiloader;
+		multiloader.init({baseUrl: "models/"});
+		loadRequest = new multiloader.LoadRequest();
+		models.forEach(function(name){
+			loadRequest.objUrls.push(name + ".obj");
+			loadRequest.mtlUrls.push(name + ".mtl");
+		});
+		multiloader.load(loadRequest, onLoaded); //once the loading is finished, onLoaded is called
+	})();
+	
+	function onLoaded(){ // every element in the models array can be given a name and set up here
+		console.log("loading models complete, running onLoaded");
+		scene.add(doorEXIT = loadRequest.objects[0]);
+		doorEXIT.position.set(5.76, -1.739, -5.08);
+		doorEXIT.rotation.y = THREE.Math.degToRad(130.603);
+		doorEXIT.addEventListener("cursorup", function(){
+			document.getElementById("doorEXIT").click();
+		});
+		console.log("added doorEXIT");
+		
+		doorEXIT2 = doorEXIT.clone();
+		scene.add(doorEXIT2);
+		doorEXIT2.position.set(9.679, -1.739, -5.942);
+		doorEXIT2.rotation.y = THREE.Math.degToRad(-90);
+		doorEXIT2.addEventListener("cursorup", function(){
+			document.getElementById("doorEXIT2").click();
+		});
+		console.log("added doorEXIT2");
+		
+		
+		scene.add(water = loadRequest.objects[1]);
+		console.log("added water");
+		watercaustics = water.clone();
+		scene.add(watercaustics);
+		watercaustics.position.set(0, -0.9, 0);
+		console.log("added watercaustics");
+		
+		//Create Texture object and Material for manual animation of water surface
+		var waterSurfaceTexture = new THREE.TextureLoader().load( "models/water.png" );
+			waterSurfaceTexture.wrapS = THREE.RepeatWrapping;
+			waterSurfaceTexture.wrapT = THREE.RepeatWrapping;
+			waterSurfaceTexture.repeat.set( 4, 4 );
+		var waterSurfaceMat = new THREE.MeshBasicMaterial( {map: waterSurfaceTexture} );
+		console.log("created waterSurface material");
+		
+		//Create Texture object and Material for manual animation of water caustics
+		var waterCausticsTexture = new THREE.TextureLoader().load( "models/waterbottom.png" );
+			waterCausticsTexture.wrapS = THREE.RepeatWrapping;
+			waterCausticsTexture.wrapT = THREE.RepeatWrapping;
+			waterCausticsTexture.repeat.set( 4, 4 );
+		var waterCausticsMat = new THREE.MeshBasicMaterial( {map: waterSurfaceTexture} );
+		console.log("created waterCaustics material");
+		
+		water.children[1].material = waterSurfaceMat;
+		water.children[1].material.map.repeat.height = 4;
+		water.children[1].material.map.repeat.width = 4;
+		water.children[1].material.opacity = 0.2;
+		water.children[1].material.transparent = true;
+		console.log("assigned waterSurface Material to waterSurface");
+		
+		watercaustics.children[1].material = waterCausticsMat;
+		watercaustics.children[1].material.map.repeat.height = 5;
+		watercaustics.children[1].material.map.repeat.width = 5;
+		watercaustics.children[1].material.opacity = 0.2;
+		watercaustics.children[1].material.transparent = true;
+		console.log("assigned waterCaustics Material to waterCaustics");
+				
+		scene.add(flooring = loadRequest.objects[2]);
+		flooring.children[1].material.map.repeat.height = 3;
+		flooring.children[1].material.map.repeat.width = 3;
+		console.log("added flooring");
+		
+		scene.add(litterbox = loadRequest.objects[3]);
+		litterbox.position.set(13.607, -2.621, 12.891);
+		litterbox.rotation.y = THREE.Math.degToRad(90);
+		scene.add(litter = loadRequest.objects[4]);
+		litter.position.set(13.607, -2.621, 12.891);
+		litter.rotation.y = THREE.Math.degToRad(90);
+		console.log("added litterbox and litter");
+		
+		scene.add(flooringcap = loadRequest.objects[5]);
+		console.log("added carpet cap in theater room");
+		
+		scene.add(stairs = loadRequest.objects[6]);
+		stairs.children[1].material.map.repeat.height = 1;
+		stairs.children[1].material.map.repeat.width = 1;
+		console.log("added carpet to theater room");
+		
+		scene.add(htfloorbedroom = loadRequest.objects[7]);
+		htfloorbedroom.position.set(0, -0.005, 0);
+		console.log("added bedroom floor");
+		
+		scene.add(pooldonut = loadRequest.objects[8]);
+		pooldonut.position.set(poolDonutBasePosition[0], poolDonutBasePosition[1], poolDonutBasePosition[2]);
+		console.log("added pooldonut");
+		
+		//pooldonut.addEventListener("cursorup", function(){
+		//	document.getElementById("doorEXIT").click();
+		//});
+		
+		scene.add(ducky = loadRequest.objects[9]);
+		ducky.position.set(duckyBasePosition[0], duckyBasePosition[1], duckyBasePosition[2]);
+		console.log("added ducky");
+		
+		sceneloaded = true;
+		console.log("Model loading complete");
+	};
+	
+	var sphereGeo1 = new THREE.SphereGeometry(400, 20, 20);
+	var sphereMaterial1 = new THREE.MeshBasicMaterial( { 
+		map: THREE.ImageUtils.loadTexture( "models/mountainSnow1.jpg" ), 
+		//opacity: 0.8,
+		//transparent : true, 
+		side: THREE.BackSide } );
+	sphereMesh1 = new THREE.Mesh(sphereGeo1, sphereMaterial1);
+	scene.add(sphereMesh1);
+	sphereMesh1.rotation.y = -90;
+	console.log("created skysphere");
+	
+/*	var sphereGeo2 = new THREE.SphereGeometry(400, 20, 20);		
+	var sphereMaterial2 = new THREE.MeshBasicMaterial( { 
+		map: THREE.ImageUtils.loadTexture( "models/panohaze.png" ), 
+		opacity: 1.0,
+		transparent : true, 
+		side: THREE.BackSide } );
+	sphereMesh2 = new THREE.Mesh(sphereGeo2, sphereMaterial2);
+	scene.add(sphereMesh2);
+*/
+
+	function animate() {
+		requestAnimationFrame(animate);
+		animateTick++;
+		if (sceneloaded==true) {
+			pooldonut.rotation.x = (Math.sin(animateTick/10)*0.0125);
+			pooldonut.rotation.z = (Math.cos(animateTick/10)*0.0125);
+			pooldonut.position.x = (poolDonutBasePosition[0] + (Math.sin(animateTick/200)*-0.1));
+			pooldonut.position.y = (poolDonutBasePosition[1] + (Math.sin(animateTick/8)*0.0125));
+			pooldonut.position.z = (poolDonutBasePosition[2] + (Math.sin(animateTick/200)*0.2));
+			ducky.rotation.x = (Math.sin(animateTick/8)*0.025);
+			ducky.rotation.y = (Math.sin((animateTick)/1000)*4);
+			ducky.rotation.z = (Math.cos(animateTick/8)*0.025);
+			ducky.position.x = (duckyBasePosition[0] + (Math.sin(animateTick/230)*-0.1));
+			ducky.position.y = (duckyBasePosition[1] + (Math.sin(animateTick/6.3)*0.00625));
+			ducky.position.z = (duckyBasePosition[2] + (Math.sin(animateTick/230)*0.2));
+			water.children[1].material.map.offset.x = Math.sin(animateTick/200)*0.1;
+			water.children[1].material.map.offset.y = Math.sin(animateTick/239)*0.1;
+			watercaustics.children[1].material.map.offset.x = Math.sin(animateTick/220)*-0.2;
+			watercaustics.children[1].material.map.offset.y = Math.sin(animateTick/200)*-0.2;
+			//sphereMesh1.rotation.x += -0.0195;
+			//sphereMesh1.rotation.y += -0.0165;
+			//sphereMesh1.rotation.z += -0.0155;
+			//renderer.render(scene);
+		};
+		renderer.render(scene);
+	};
+
+	animate();
+};
+</script>
+<a id="doorEXIT" href="altspace://account.altvr.com/api/events/466217215826330546"></a></div>
+<a id="doorEXIT2" href="altspace://account.altvr.com/api/spaces/the-welcome-space"></a></div>
+</body>
+</html>
