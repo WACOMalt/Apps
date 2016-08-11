@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Cake</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
+<script src="http://wacomalt.com/altvr/dist/altspace.min.js"></script>
+</head>
+<body>
+    <script>
+        if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+
+            var config = {
+                models: {
+					'cakemango': { position: { x: 0, y: -.50, z: 0}, offset: { x: 0, y: 0, z: 0 } }
+                },
+                modelScaleFactor: 4,
+
+            };
+			
+			
+			var scene = new THREE.Scene();
+			var renderer = altspace.getThreeJSRenderer();
+
+            var modelNames = [];
+            var loadRequest;
+            var scale;
+			
+			var promises = [altspace.getEnclosure()];
+                Promise.all(promises).then(function (array) {
+                    enclosure = array[0];
+                    scale = enclosure.pixelsPerMeter * config.modelScaleFactor;
+                    loadModels();
+                }).catch(function (err) {
+                    console.log('Failed to get Altspace browser properties', err);
+				});
+			
+			
+            function loadModels() {
+                var multiloader = altspace.utilities.multiloader;
+                multiloader.init({
+                    crossOrigin: 'anonymous',
+                    baseUrl: 'http://wacomalt.com/altvr/models/',
+                    TRACE: true//enable for debugging logs
+                });
+                loadRequest = new multiloader.LoadRequest();
+                modelNames = Object.keys(config.models);
+                for (var i = 0; i < modelNames.length; i++) {
+                    var name = modelNames[i];
+                    loadRequest.objUrls.push(name + '.obj');
+                    loadRequest.mtlUrls.push(name + '.mtl');
+                }
+                multiloader.load(loadRequest, onLoaded);
+            }
+
+            function onLoaded() {
+
+                for (var i = 0; i < loadRequest.objects.length; i++) {
+                    var obj = loadRequest.objects[i];
+                    var name = modelNames[i];//guaranteed to be in same order
+                    var spawnPosition = new THREE.Vector3();
+                    spawnPosition.copy(config.models[name].position);
+                    spawnPosition.multiplyScalar(scale);
+                    obj.position.copy(spawnPosition);//initial position
+                    obj.scale.set(scale, scale, scale);
+                    scene.add(obj);
+					renderer.render(scene);
+					console.log("object added to scene" + modelNames[i]);
+                }
+				
+            }
+
+    </script>
+</body>
+</html>
