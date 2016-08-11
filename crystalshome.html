@@ -10,20 +10,30 @@
 <script>
 if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 
-var scene = new THREE.Scene();
-var renderer = altspace.getThreeJSRenderer();
-var models = ["doortall", "water", "flooring", "litterbox", "litter", "flooringcap", "stairs", "htfloorbedroom", "pooldonut", "ducky"];
+var sim = altspace.utilities.Simulation();
+var config = { authorId: "evildoer", appId: "Crystal", baseRefUrl: "https://crystal-6afc1.firebaseio.com/"};
+var sceneSync;
+var models = ["doortall", "water", "flooring", "litterbox", "litter", "flooringcap", "stairs",
+	"htfloorbedroom", "pooldonut", "ducky", "shots"
+];
 var animateTick = 0;
 //var poolDonutBasePosition = [0, 0, 0];
 var poolDonutBasePosition = [-4.924, -2.635, 7.806];
 var duckyBasePosition = [-5.5, -2.636, 1.349];
 var sceneloaded = false;
+var repeats = 0;
+var frame = 0;
+var on = 3.9782;
+var off = -1000;
+var onOrOff = [];
+var shotsLoop = new Audio("shots.mp3");
+shotsLoop.volume = 0.5;
 
 // a function in brackets is self invoking. it will run first
 (function setup(){
 	altspace.getEnclosure().then(function(enclosure){
 		scale = enclosure.pixelsPerMeter;
-		scene.scale.set(scale,scale,scale);
+		sim.scene.scale.set(scale,scale,scale);
 		main(); // .then is called once it has the enclosure info. so we move onto main() once it has the pixels per meter
 	});
 })();
@@ -42,7 +52,7 @@ function main(){
 	
 	function onLoaded(){ // every element in the models array can be given a name and set up here
 		console.log("loading models complete, running onLoaded");
-		scene.add(doorEXIT = loadRequest.objects[0]);
+		sim.scene.add(doorEXIT = loadRequest.objects[0]);
 		doorEXIT.position.set(5.76, -1.739, -5.08);
 		doorEXIT.rotation.y = THREE.Math.degToRad(130.603);
 		doorEXIT.addEventListener("cursorup", function(){
@@ -51,7 +61,7 @@ function main(){
 		console.log("added doorEXIT");
 		
 		doorEXIT2 = doorEXIT.clone();
-		scene.add(doorEXIT2);
+		sim.scene.add(doorEXIT2);
 		doorEXIT2.position.set(9.679, -1.739, -5.942);
 		doorEXIT2.rotation.y = THREE.Math.degToRad(-90);
 		doorEXIT2.addEventListener("cursorup", function(){
@@ -59,11 +69,10 @@ function main(){
 		});
 		console.log("added doorEXIT2");
 		
-		
-		scene.add(water = loadRequest.objects[1]);
+		sim.scene.add(water = loadRequest.objects[1]);
 		console.log("added water");
 		watercaustics = water.clone();
-		scene.add(watercaustics);
+		sim.scene.add(watercaustics);
 		watercaustics.position.set(0, -0.9, 0);
 		console.log("added watercaustics");
 		
@@ -97,32 +106,32 @@ function main(){
 		watercaustics.children[1].material.transparent = true;
 		console.log("assigned waterCaustics Material to waterCaustics");
 				
-		scene.add(flooring = loadRequest.objects[2]);
+		sim.scene.add(flooring = loadRequest.objects[2]);
 		flooring.children[1].material.map.repeat.height = 3;
 		flooring.children[1].material.map.repeat.width = 3;
 		console.log("added flooring");
 		
-		scene.add(litterbox = loadRequest.objects[3]);
+		sim.scene.add(litterbox = loadRequest.objects[3]);
 		litterbox.position.set(13.607, -2.621, 12.891);
 		litterbox.rotation.y = THREE.Math.degToRad(90);
-		scene.add(litter = loadRequest.objects[4]);
+		sim.scene.add(litter = loadRequest.objects[4]);
 		litter.position.set(13.607, -2.621, 12.891);
 		litter.rotation.y = THREE.Math.degToRad(90);
 		console.log("added litterbox and litter");
 		
-		scene.add(flooringcap = loadRequest.objects[5]);
+		sim.scene.add(flooringcap = loadRequest.objects[5]);
 		console.log("added carpet cap in theater room");
 		
-		scene.add(stairs = loadRequest.objects[6]);
+		sim.scene.add(stairs = loadRequest.objects[6]);
 		stairs.children[1].material.map.repeat.height = 1;
 		stairs.children[1].material.map.repeat.width = 1;
 		console.log("added carpet to theater room");
 		
-		scene.add(htfloorbedroom = loadRequest.objects[7]);
+		sim.scene.add(htfloorbedroom = loadRequest.objects[7]);
 		htfloorbedroom.position.set(0, -0.005, 0);
 		console.log("added bedroom floor");
 		
-		scene.add(pooldonut = loadRequest.objects[8]);
+		sim.scene.add(pooldonut = loadRequest.objects[8]);
 		pooldonut.position.set(poolDonutBasePosition[0], poolDonutBasePosition[1], poolDonutBasePosition[2]);
 		console.log("added pooldonut");
 		
@@ -130,12 +139,160 @@ function main(){
 		//	document.getElementById("doorEXIT").click();
 		//});
 		
-		scene.add(ducky = loadRequest.objects[9]);
+		sim.scene.add(ducky = loadRequest.objects[9]);
 		ducky.position.set(duckyBasePosition[0], duckyBasePosition[1], duckyBasePosition[2]);
 		console.log("added ducky");
 		
 		sceneloaded = true;
 		console.log("Model loading complete");
+		
+		function drawNeon(file, wd, ht, x, y, z, deg, opa){
+			var geometry = new THREE.PlaneGeometry(wd, ht);
+			var material = new THREE.MeshBasicMaterial({opacity: opa, transparent: true});
+			var plane = new THREE.Mesh(geometry, material);
+			plane.name = file;
+			plane.position.set(x, y, z);
+			plane.rotation.y = THREE.Math.degToRad(deg);
+			sim.scene.add(plane); //add the plane before textures load
+			var loader = new THREE.TextureLoader();
+			loader.load("./models/" + file + ".png", function(texture){
+				plane.material.map = texture;
+			});
+		};
+		
+		drawNeon("neonOrange", 2.1767, 0.5272, 7.20, 1.1211, 3.9782, -90, 0.3);
+		drawNeon("orangeGlow", 2.1767, 0.5272, 7.23, 1.1211, 3.9782, -90, 1);
+		drawNeon("neonPurple", 2.1767, 0.5272, 7.20, 0.5939, 3.9782, -90, 0.3);
+		drawNeon("purpleGlow", 2.1767, 0.5272, 7.23, 0.5939, 3.9782, -90, 1);
+		drawNeon("neonGreen",  2.1767, 0.5272, 7.20, 0.0666, 3.9782, -90, 0.3);
+		drawNeon("greenGlow",  2.1767, 0.5272, 7.23, 0.0666, 3.9782, -90, 1);
+		drawNeon("neonTube1",  2.1767, 0.5272, 7.20, 1.1211,  -1000, -90, 0.1);
+		drawNeon("shadow1",    2.1767, 0.5272, 7.23, 1.1211,  -1000, -90, 1);
+		drawNeon("neonTube2",  2.1767, 0.5272, 7.20, 0.5939,  -1000, -90, 0.1);
+		drawNeon("shadow2",    2.1767, 0.5272, 7.23, 0.5939,  -1000, -90, 1);
+		drawNeon("neonTube3",  2.1767, 0.5272, 7.20, 0.0666,  -1000, -90, 0.1);
+		drawNeon("shadow3",    2.1767, 0.5272, 7.23, 0.0666,  -1000, -90, 1);
+		
+		neonOrange = sim.scene.getObjectByName("neonOrange");
+		orangeGlow = sim.scene.getObjectByName("orangeGlow");
+		neonPurple = sim.scene.getObjectByName("neonPurple");
+		purpleGlow = sim.scene.getObjectByName("purpleGlow");
+		neonGreen = sim.scene.getObjectByName("neonGreen");
+		greenGlow = sim.scene.getObjectByName("greenGlow");
+		neonTube1 = sim.scene.getObjectByName("neonTube1");
+		shadow1 = sim.scene.getObjectByName("shadow1"); 
+		neonTube2 = sim.scene.getObjectByName("neonTube2");
+		shadow2 = sim.scene.getObjectByName("shadow2");
+		neonTube3 = sim.scene.getObjectByName("neonTube3");
+		shadow3 = sim.scene.getObjectByName("shadow3");
+			
+		sync();
+	};
+	
+	function sync(){
+		altspace.utilities.sync.connect(config).then(function(connection) {
+			sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+				instantiators: {'ShotModel': loadShotModel }, 
+				ready: ready
+			});
+		sim.scene.addBehavior(sceneSync);
+		});
+	};
+	
+	function loadShotModel(){
+		var shots = loadRequest.objects[10]; // if you add more objects, make sure they start at 11
+		shots.addBehaviors(
+			altspace.utilities.behaviors.Object3DSync(),
+			shotsBehavior
+		);
+		sim.scene.add(shots);
+		return shots;
+	};
+	
+	function ready(firstInstance) {
+		if (firstInstance) {
+			sceneSync.instantiate('ShotModel');
+		};
+	};
+	
+	var shotsBehavior = {
+		awake: function (object3d) {
+			var sync = object3d.getBehaviorByType('Object3DSync');
+			clickRef = sync.dataRef.child('activate');
+			function turnOff(){clickRef.set(false)};
+			clickRef.on('value', function (snapshot) {
+				value = snapshot.val(); 
+				if (!value) return;
+				if (value == true){
+					doShots();
+					setTimeout(turnOff, 8000);
+				};
+			});
+			object3d.addEventListener('cursordown', function() {
+					clickRef.set(true);
+			});
+		}
+	};
+
+	function doShots(){
+		timer = Date.now();
+		if(repeats == 0) shotsLoop.play();
+		if(frame == 0){
+			loopstart = Date.now();
+			frame=1;
+		};
+		if(frame == 1){ //orange on
+			onOrOff = [off, on, on, on, off, off];
+			if(timer >= loopstart+380)frame=2;
+		}else if(frame == 2){ //all off
+			onOrOff = [on, on, on, off, off, off];
+			if(timer >= loopstart+480)frame=3;
+		}else if(frame == 3){ //purple on
+			onOrOff = [on, off, on, off, on, off];
+			if(timer >= loopstart+850)frame=4;
+		}else if(frame == 4){ //all off
+			onOrOff = [on, on, on, off, off, off];
+			if(timer >= loopstart+950)frame=5;
+		}else if(frame == 5){ // green on
+			onOrOff = [on, on, off, off, off, on];
+			if(timer >= loopstart+1200)frame=6;
+		}else if(frame == 6){ // all off
+			onOrOff = [on, on, on, off, off, off];
+			if(timer >= loopstart+1300)frame=7;
+		}else if(frame == 7){ // all on
+			onOrOff = [off, off, off, on, on, on];				
+			if(timer >= loopstart+1552)frame=8;
+		}else if(frame == 8){ // all off
+			onOrOff = [on, on, on, off, off, off];				
+			if(timer >= loopstart+1652)frame=9;
+		}else if(frame == 9){ // all on
+			onOrOff = [off, off, off, on, on, on];		
+			if(timer >= loopstart+1767)frame=10;
+		}else if(frame == 10){ // all off
+			onOrOff = [on, on, on, off, off, off];	
+			if(timer >= loopstart+1867)frame=11;
+		}else if(frame == 11){
+			frame=0;
+			repeats++;
+		};
+		if(repeats < 3)requestAnimationFrame(doShots);
+		else{ 
+			repeats = 0;
+			onOrOff = [off, off, off, on, on, on];
+		};
+		neonTube1.position.z = onOrOff[0];
+		shadow1.position.z = onOrOff[0];
+		neonTube2.position.z = onOrOff[1];
+		shadow2.position.z = onOrOff[1];
+		neonTube3.position.z = onOrOff[2];
+		shadow3.position.z = onOrOff[2];
+		neonOrange.position.z = onOrOff[3];
+		orangeGlow.position.z = onOrOff[3];
+		neonPurple.position.z = onOrOff[4];
+		purpleGlow.position.z = onOrOff[4];
+		neonGreen.position.z = onOrOff[5];
+		greenGlow.position.z = onOrOff[5];
+		if(repeats == 0)return;
 	};
 	
 	var sphereGeo1 = new THREE.SphereGeometry(400, 20, 20);
@@ -145,7 +302,7 @@ function main(){
 		//transparent : true, 
 		side: THREE.BackSide } );
 	sphereMesh1 = new THREE.Mesh(sphereGeo1, sphereMaterial1);
-	scene.add(sphereMesh1);
+	sim.scene.add(sphereMesh1);
 	sphereMesh1.rotation.y = -90;
 	console.log("created skysphere");
 	
@@ -156,7 +313,7 @@ function main(){
 		transparent : true, 
 		side: THREE.BackSide } );
 	sphereMesh2 = new THREE.Mesh(sphereGeo2, sphereMaterial2);
-	scene.add(sphereMesh2);
+	sim.scene.add(sphereMesh2);
 */
 
 	function animate() {
@@ -181,9 +338,7 @@ function main(){
 			//sphereMesh1.rotation.x += -0.0195;
 			//sphereMesh1.rotation.y += -0.0165;
 			//sphereMesh1.rotation.z += -0.0155;
-			//renderer.render(scene);
 		};
-		renderer.render(scene);
 	};
 
 	animate();
