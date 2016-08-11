@@ -10,8 +10,7 @@
 <script>
 if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 
-var scene = new THREE.Scene();
-var renderer = altspace.getThreeJSRenderer();
+var sim = altspace.utilities.Simulation();
 var models = ["doortall", "water", "flooring", "litterbox", "litter", "flooringcap", "stairs", "htfloorbedroom", "pooldonut", "ducky"];
 var animateTick = 0;
 //var poolDonutBasePosition = [0, 0, 0];
@@ -23,7 +22,7 @@ var sceneloaded = false;
 (function setup(){
 	altspace.getEnclosure().then(function(enclosure){
 		scale = enclosure.pixelsPerMeter;
-		scene.scale.set(scale,scale,scale);
+		sim.scene.scale.set(scale,scale,scale);
 		main(); // .then is called once it has the enclosure info. so we move onto main() once it has the pixels per meter
 	});
 })();
@@ -42,7 +41,7 @@ function main(){
 	
 	function onLoaded(){ // every element in the models array can be given a name and set up here
 		console.log("loading models complete, running onLoaded");
-		scene.add(doorEXIT = loadRequest.objects[0]);
+		sim.scene.add(doorEXIT = loadRequest.objects[0]);
 		doorEXIT.position.set(5.76, -1.739, -5.08);
 		doorEXIT.rotation.y = THREE.Math.degToRad(130.603);
 		doorEXIT.addEventListener("cursorup", function(){
@@ -51,7 +50,7 @@ function main(){
 		console.log("added doorEXIT");
 		
 		doorEXIT2 = doorEXIT.clone();
-		scene.add(doorEXIT2);
+		sim.scene.add(doorEXIT2);
 		doorEXIT2.position.set(9.679, -1.739, -5.942);
 		doorEXIT2.rotation.y = THREE.Math.degToRad(-90);
 		doorEXIT2.addEventListener("cursorup", function(){
@@ -60,10 +59,10 @@ function main(){
 		console.log("added doorEXIT2");
 		
 		
-		scene.add(water = loadRequest.objects[1]);
+		sim.scene.add(water = loadRequest.objects[1]);
 		console.log("added water");
 		watercaustics = water.clone();
-		scene.add(watercaustics);
+		sim.scene.add(watercaustics);
 		watercaustics.position.set(0, -0.9, 0);
 		console.log("added watercaustics");
 		
@@ -97,32 +96,32 @@ function main(){
 		watercaustics.children[1].material.transparent = true;
 		console.log("assigned waterCaustics Material to waterCaustics");
 				
-		scene.add(flooring = loadRequest.objects[2]);
+		sim.scene.add(flooring = loadRequest.objects[2]);
 		flooring.children[1].material.map.repeat.height = 3;
 		flooring.children[1].material.map.repeat.width = 3;
 		console.log("added flooring");
 		
-		scene.add(litterbox = loadRequest.objects[3]);
+		sim.scene.add(litterbox = loadRequest.objects[3]);
 		litterbox.position.set(13.607, -2.621, 12.891);
 		litterbox.rotation.y = THREE.Math.degToRad(90);
-		scene.add(litter = loadRequest.objects[4]);
+		sim.scene.add(litter = loadRequest.objects[4]);
 		litter.position.set(13.607, -2.621, 12.891);
 		litter.rotation.y = THREE.Math.degToRad(90);
 		console.log("added litterbox and litter");
 		
-		scene.add(flooringcap = loadRequest.objects[5]);
+		sim.scene.add(flooringcap = loadRequest.objects[5]);
 		console.log("added carpet cap in theater room");
 		
-		scene.add(stairs = loadRequest.objects[6]);
+		sim.scene.add(stairs = loadRequest.objects[6]);
 		stairs.children[1].material.map.repeat.height = 1;
 		stairs.children[1].material.map.repeat.width = 1;
 		console.log("added carpet to theater room");
 		
-		scene.add(htfloorbedroom = loadRequest.objects[7]);
+		sim.scene.add(htfloorbedroom = loadRequest.objects[7]);
 		htfloorbedroom.position.set(0, -0.005, 0);
 		console.log("added bedroom floor");
 		
-		scene.add(pooldonut = loadRequest.objects[8]);
+		sim.scene.add(pooldonut = loadRequest.objects[8]);
 		pooldonut.position.set(poolDonutBasePosition[0], poolDonutBasePosition[1], poolDonutBasePosition[2]);
 		console.log("added pooldonut");
 		
@@ -130,7 +129,7 @@ function main(){
 		//	document.getElementById("doorEXIT").click();
 		//});
 		
-		scene.add(ducky = loadRequest.objects[9]);
+		sim.scene.add(ducky = loadRequest.objects[9]);
 		ducky.position.set(duckyBasePosition[0], duckyBasePosition[1], duckyBasePosition[2]);
 		console.log("added ducky");
 		
@@ -145,7 +144,7 @@ function main(){
 		//transparent : true, 
 		side: THREE.BackSide } );
 	sphereMesh1 = new THREE.Mesh(sphereGeo1, sphereMaterial1);
-	scene.add(sphereMesh1);
+	sim.scene.add(sphereMesh1);
 	sphereMesh1.rotation.y = -90;
 	console.log("created skysphere");
 	
@@ -156,7 +155,7 @@ function main(){
 		transparent : true, 
 		side: THREE.BackSide } );
 	sphereMesh2 = new THREE.Mesh(sphereGeo2, sphereMaterial2);
-	scene.add(sphereMesh2);
+	sim.scene.add(sphereMesh2);
 */
 
 	function animate() {
@@ -181,9 +180,8 @@ function main(){
 			//sphereMesh1.rotation.x += -0.0195;
 			//sphereMesh1.rotation.y += -0.0165;
 			//sphereMesh1.rotation.z += -0.0155;
-			//renderer.render(scene);
+			//renderer.render(sim.scene);
 		};
-		renderer.render(scene);
 	};
 
 	animate();
