@@ -1,0 +1,367 @@
+﻿<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Hats Example</title>
+<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="../dist/altspace.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
+</head>
+<body>
+    <script>
+        if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+
+            var config = {
+                models: {
+					//'gridtest': { position: { x: 0, y: 0, z: 0 }, offset: { x: 0, y: 0, z: 0 } },
+					'tikitorches2': { position: { x: 0, y: 0, z: 0 }, offset: { x: 0, y: 0, z: 0 } },
+					'firepitcenter1': { position: { x: 0, y: 0, z: 0 }, offset: { x: 0, y: 0, z: 0 } },
+					'firepitcenterblocks1': { position: { x: 0, y: 0, z: 0 }, offset: { x: 0, y: 0, z: 0 } },
+					'tenttop': { position: { x: -1.25, y: 0, z: 2.75 }, offset: { x: 0, y: 0, z: 0 } },
+					'tentframe': { position: { x: -1.25, y: 0, z: 2.75}, offset: { x: 0, y: 0, z: 0 } },
+					'banner': { position: { x: 0, y: 0, z: 0}, offset: { x: 0, y: 0, z: 0 } },
+					'cabin': { position: { x: 0, y: 0, z: 0}, offset: { x: 0, y: 0, z: 0 } },
+					'crystalscorner': { position: { x: 0, y: 0, z: 0}, offset: { x: 0, y: 0, z: 0 } },
+					'thing': { position: { x: 0, y: 0, z: 0}, offset: { x: 0, y: 0, z: 0 } }
+					//'crystal': { position: { x: -2.925, y: -1.9, z: 11.125}, offset: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 180, z: 11} }
+					//'flame': { position: { x: 0, y: 0, z: 0 }, offset: { x: 0, y: 0, z: 0 } }
+                },
+                modelScaleFactor: 1,
+
+            };
+			
+			
+			var animationInc = 0;
+			var fireCenter = new THREE.Vector3(-2187.098, -800, -2338.348);
+			var fireCenter2 = new THREE.Vector3(-1087.098, -800, 4628.348);
+			
+			var fireWidth = 200;
+			var fireHeight = 10;
+			var fireMaxHeight = fireCenter.y + 800;
+			var fireMaxHeight2 = fireCenter2.y + 800;
+			var fireDriftDistance = 2;
+			var fireDriftSpeed = 40;
+
+			var particleSize = new THREE.Vector3(1, 5, 1);
+
+			function RandInt(min, max) {
+			  return Math.floor(Math.random() * (max - min)) + min;
+			}
+			
+			var scene = new THREE.Scene();
+			var renderer = altspace.getThreeJSRenderer();
+
+			group = new THREE.Object3D();//create an empty container for particles
+			newfire = new THREE.Object3D();
+			
+			var geometry = new THREE.BoxGeometry(3, 3, 3);
+			var material = new THREE.MeshBasicMaterial({color:'#FF9920'});
+			
+			var cube = new THREE.Mesh(geometry, material);
+			var cube0FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube);//add a mesh with geometry to it
+
+			var cube1 = new THREE.Mesh(geometry, material);
+			var cube1FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube1.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube1.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube1);
+
+			var cube2 = new THREE.Mesh(geometry, material);
+			var cube2FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube2);
+
+			var cube3 = new THREE.Mesh(geometry, material);
+			var cube3FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube3.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube3.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube3);
+
+			var cube4 = new THREE.Mesh(geometry, material);
+			var cube4FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube4.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube4.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube4);
+
+			var cube5 = new THREE.Mesh(geometry, material);
+			var cube5FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube5.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube5.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube5);
+
+			var cube6 = new THREE.Mesh(geometry, material);
+			var cube6FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube6.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube6.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube6);
+
+			var cube7 = new THREE.Mesh(geometry, material);
+			var cube7FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube7.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube7.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube7);
+
+			var cube8 = new THREE.Mesh(geometry, material);
+			var cube8FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube8.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube8.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube8);
+
+			var cube9 = new THREE.Mesh(geometry, material);
+			var cube9FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube9.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube9.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+			group.add(cube9);
+			
+			/*
+			var cube2_0 = new THREE.Mesh(geometry, material);
+			var cube2_0FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_0.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_0.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_0);//add a mesh with geometry to it
+
+			var cube2_1 = new THREE.Mesh(geometry, material);
+			var cube2_1FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_1.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_1.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_1);
+
+			var cube2_2 = new THREE.Mesh(geometry, material);
+			var cube2_2FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_2.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_2.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_2);
+
+			var cube2_3 = new THREE.Mesh(geometry, material);
+			var cube2_3FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_3.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_3.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_3);
+
+			var cube2_4 = new THREE.Mesh(geometry, material);
+			var cube2_4FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_4.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_4.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_4);
+
+			var cube2_5 = new THREE.Mesh(geometry, material);
+			var cube2_5FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_5.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_5.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_5);
+
+			var cube2_6 = new THREE.Mesh(geometry, material);
+			var cube2_6FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_6.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_6.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_6);
+
+			var cube2_7 = new THREE.Mesh(geometry, material);
+			var cube2_7FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_7.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_7.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_7);
+
+			var cube2_8 = new THREE.Mesh(geometry, material);
+			var cube2_8FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_8.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_8.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_8);
+
+			var cube2_9 = new THREE.Mesh(geometry, material);
+			var cube2_9FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+10)));
+			cube2_9.scale.set(particleSize.x, particleSize.y, particleSize.z);
+			cube2_9.position.set(RandInt((fireCenter2.x-(fireWidth/2)), (fireCenter2.x+(fireWidth/2))), RandInt((fireCenter2.y-(fireHeight/2)), (fireCenter2.y+(fireHeight/2))), RandInt((fireCenter2.z-(fireWidth/2)), (fireCenter2.z+(fireWidth/2))));
+			newfire.add(cube2_9);
+			*/
+
+			scene.add( group );//when done, add the group to the scene
+			//scene.add( newfire );
+			
+			// Creation of ThreeJS Cube (End)
+			
+			var sphereGeo1 = new THREE.SphereGeometry(400, 20, 20, Math.PI + 0.3, -2*Math.PI);
+			var sphereGeo2 = new THREE.SphereGeometry(400, 20, 20, Math.PI + 0.3, -2*Math.PI);
+			var texture1 = THREE.ImageUtils.loadTexture( "https://upload.wikimedia.org/wikipedia/commons/a/a1/ESO_-_The_Milky_Way_panorama_(by).jpg" );
+			var texture2 = THREE.ImageUtils.loadTexture( "panohaze.png" );
+			texture1.needsUpdate = true;
+			texture1.minFilter = THREE.LinearFilter;
+			texture1.magFilter = THREE.LinearFilter;
+			texture1.format = THREE.RGBFormat;
+			texture2.minFilter = THREE.LinearFilter;
+			texture2.magFilter = THREE.LinearFilter;
+			texture2.format = THREE.RGBAFormat;
+
+            var modelNames = [];
+            var loadRequest;
+            var scale;
+			
+			var promises = [altspace.getEnclosure()];
+                Promise.all(promises).then(function (array) {
+                    enclosure = array[0];
+                    scale = enclosure.pixelsPerMeter * config.modelScaleFactor;
+                    loadModels();
+                }).catch(function (err) {
+                    console.log('Failed to get Altspace browser properties', err);
+				});
+			
+			
+			var sphereMaterial1 = new THREE.MeshPhongMaterial( { 
+				color: 0xffffff, 
+				map: texture1, 
+				//opacity: 0.8,
+				//transparent : true, 
+				side: THREE.DoubleSide } );
+				
+			var sphereMaterial2 = new THREE.MeshPhongMaterial( { 
+				color: 0xffffff, 
+				map: texture2, 
+				opacity: 1.0,
+				transparent : true, 
+				side: THREE.DoubleSide } );
+			
+			sphereMesh1 = new THREE.Mesh(sphereGeo1, sphereMaterial1);
+			sphereMesh1.position.x = 0;
+			sphereMesh1.position.y = 0;
+			sphereMesh1.position.z = 0;		
+			sphereMesh1.scale.z = -1;
+			
+			sphereMesh2 = new THREE.Mesh(sphereGeo2, sphereMaterial2);
+			sphereMesh2.position.x = 0;
+			sphereMesh2.position.y = 0;
+			sphereMesh2.position.z = 0;
+			sphereMesh2.scale.z = -1;
+			
+            function loadModels() {
+                var multiloader = altspace.utilities.multiloader;
+                multiloader.init({
+                    crossOrigin: 'anonymous',
+                    baseUrl: 'models/',
+                    TRACE: true//enable for debugging logs
+                });
+                loadRequest = new multiloader.LoadRequest();
+                modelNames = Object.keys(config.models);
+                for (var i = 0; i < modelNames.length; i++) {
+                    var name = modelNames[i];
+                    loadRequest.objUrls.push(name + '.obj');
+                    loadRequest.mtlUrls.push(name + '.mtl');
+                }
+                multiloader.load(loadRequest, onLoaded);
+            }
+
+            function onLoaded() {
+
+                for (var i = 0; i < loadRequest.objects.length; i++) {
+                    var obj = loadRequest.objects[i];
+                    var name = modelNames[i];//guaranteed to be in same order
+                    var spawnPosition = new THREE.Vector3();
+                    spawnPosition.copy(config.models[name].position);
+                    spawnPosition.multiplyScalar(scale);
+                    obj.position.copy(spawnPosition);//initial position
+                    obj.scale.set(scale, scale, scale);
+                    scene.add(obj);
+					console.log("object added to scene" + modelNames[i]);
+                }
+				
+				scene.add(sphereMesh1);
+				scene.add(sphereMesh2);
+				sphereMesh1.scale.set(500, 500, 500);
+				sphereMesh2.scale.set(400, 400, 400);
+				//altspace.getThreeJSTrackingSkeleton().then(function (skeleton) { setInterval(function () { console.log(skeleton.getJoint('Head').position); }, 1000);});
+				
+            }
+			
+					//Update & Rendering
+			function animate() {
+				animationInc++;
+				requestAnimationFrame(animate);
+				ParticleAnimateFunction();
+				renderer.render(scene);
+				sphereMesh1.rotation.x += -0.0000195;
+				sphereMesh1.rotation.y += -0.0000165;
+				sphereMesh1.rotation.z += -0.0000155;
+			}
+			
+			animate();
+			
+			function ParticleAnimateFunction() {
+			//move particles up, and reset particles when they leave the box, 
+			if (cube.position.y > fireMaxHeight) {cube.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube.position.y += 3.1;}
+			if (cube1.position.y > fireMaxHeight) {cube1.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube1.position.y += 2.6;}
+			if (cube2.position.y > fireMaxHeight) {cube2.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2.position.y += 2.5;}
+			if (cube3.position.y > fireMaxHeight) {cube3.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube3.position.y += 2.2;}
+			if (cube4.position.y > fireMaxHeight) {cube4.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube4.position.y += 2.9;}	
+			if (cube5.position.y > fireMaxHeight) {cube5.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube5.position.y += 2.1;}
+			if (cube6.position.y > fireMaxHeight) {cube6.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube6.position.y += 2.0;}
+			if (cube7.position.y > fireMaxHeight) {cube7.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube7.position.y += 2.3;}
+			if (cube8.position.y > fireMaxHeight) {cube8.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube8.position.y += 2.32;}
+			if (cube9.position.y > fireMaxHeight) {cube9.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube9.position.y += 2.52;}
+			//move particles up, and reset particles when they leave the box, 
+			/*
+			if (cube2_0.position.y > fireMaxHeight2) {cube2_0.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_0.position.y += 3.1;}
+			if (cube2_1.position.y > fireMaxHeight2) {cube2_1.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_1.position.y += 2.6;}
+			if (cube2_2.position.y > fireMaxHeight2) {cube2_2.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_2.position.y += 2.5;}
+			if (cube2_3.position.y > fireMaxHeight2) {cube2_3.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_3.position.y += 2.2;}
+			if (cube2_4.position.y > fireMaxHeight2) {cube2_4.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_4.position.y += 2.9;}	
+			if (cube2_5.position.y > fireMaxHeight2) {cube2_5.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_5.position.y += 2.1;}
+			if (cube2_6.position.y > fireMaxHeight2) {cube2_6.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_6.position.y += 2.0;}
+			if (cube2_7.position.y > fireMaxHeight2) {cube2_7.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_7.position.y += 2.3;}
+			if (cube2_8.position.y > fireMaxHeight2) {cube2_8.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_8.position.y += 2.32;}
+			if (cube2_9.position.y > fireMaxHeight2) {cube2_9.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2_9.position.y += 2.52;}
+			*/
+			
+			//step the side to side animation
+			cube.position.x += Math.sin(animationInc/cube0FireDriftSpeed)*fireDriftDistance;
+			cube.position.z += Math.sin(animationInc/cube0FireDriftSpeed)*fireDriftDistance;
+			cube1.position.x += Math.sin(animationInc/cube1FireDriftSpeed)*fireDriftDistance;
+			cube1.position.z += Math.sin(animationInc/cube1FireDriftSpeed)*fireDriftDistance;
+			cube2.position.x += Math.sin(animationInc/cube2FireDriftSpeed)*fireDriftDistance;
+			cube2.position.z += Math.sin(animationInc/cube2FireDriftSpeed)*fireDriftDistance;
+			cube3.position.x += Math.sin(animationInc/cube3FireDriftSpeed)*fireDriftDistance;
+			cube3.position.z += Math.sin(animationInc/cube3FireDriftSpeed)*fireDriftDistance;
+			cube4.position.x += Math.sin(animationInc/cube4FireDriftSpeed)*fireDriftDistance;
+			cube4.position.z += Math.sin(animationInc/cube4FireDriftSpeed)*fireDriftDistance;
+			cube5.position.x += Math.sin(animationInc/cube5FireDriftSpeed)*fireDriftDistance;
+			cube5.position.z += Math.sin(animationInc/cube5FireDriftSpeed)*fireDriftDistance;
+			cube6.position.x += Math.sin(animationInc/cube6FireDriftSpeed)*fireDriftDistance;
+			cube6.position.z += Math.sin(animationInc/cube6FireDriftSpeed)*fireDriftDistance;
+			cube7.position.x += Math.sin(animationInc/cube7FireDriftSpeed)*fireDriftDistance;
+			cube7.position.z += Math.sin(animationInc/cube7FireDriftSpeed)*fireDriftDistance;
+			cube8.position.x += Math.sin(animationInc/cube8FireDriftSpeed)*fireDriftDistance;
+			cube8.position.z += Math.sin(animationInc/cube8FireDriftSpeed)*fireDriftDistance;
+			cube9.position.x += Math.sin(animationInc/cube9FireDriftSpeed)*fireDriftDistance;
+			cube9.position.z += Math.sin(animationInc/cube9FireDriftSpeed)*fireDriftDistance;
+			/*
+			cube2_0.position.x += Math.sin(animationInc/cube2_0FireDriftSpeed)*fireDriftDistance;
+			cube2_0.position.z += Math.sin(animationInc/cube2_0FireDriftSpeed)*fireDriftDistance;
+			cube2_1.position.x += Math.sin(animationInc/cube2_1FireDriftSpeed)*fireDriftDistance;
+			cube2_1.position.z += Math.sin(animationInc/cube2_1FireDriftSpeed)*fireDriftDistance;
+			cube2_2.position.x += Math.sin(animationInc/cube2_2FireDriftSpeed)*fireDriftDistance;
+			cube2_2.position.z += Math.sin(animationInc/cube2_2FireDriftSpeed)*fireDriftDistance;
+			cube2_3.position.x += Math.sin(animationInc/cube2_3FireDriftSpeed)*fireDriftDistance;
+			cube2_3.position.z += Math.sin(animationInc/cube2_3FireDriftSpeed)*fireDriftDistance;
+			cube2_4.position.x += Math.sin(animationInc/cube2_4FireDriftSpeed)*fireDriftDistance;
+			cube2_4.position.z += Math.sin(animationInc/cube2_4FireDriftSpeed)*fireDriftDistance;
+			cube2_5.position.x += Math.sin(animationInc/cube2_5FireDriftSpeed)*fireDriftDistance;
+			cube2_5.position.z += Math.sin(animationInc/cube2_5FireDriftSpeed)*fireDriftDistance;
+			cube2_6.position.x += Math.sin(animationInc/cube2_6FireDriftSpeed)*fireDriftDistance;
+			cube2_6.position.z += Math.sin(animationInc/cube2_6FireDriftSpeed)*fireDriftDistance;
+			cube2_7.position.x += Math.sin(animationInc/cube2_7FireDriftSpeed)*fireDriftDistance;
+			cube2_7.position.z += Math.sin(animationInc/cube2_7FireDriftSpeed)*fireDriftDistance;
+			cube2_8.position.x += Math.sin(animationInc/cube2_8FireDriftSpeed)*fireDriftDistance;
+			cube2_8.position.z += Math.sin(animationInc/cube2_8FireDriftSpeed)*fireDriftDistance;
+			cube2_9.position.x += Math.sin(animationInc/cube2_9FireDriftSpeed)*fireDriftDistance;
+			cube2_9.position.z += Math.sin(animationInc/cube2_9FireDriftSpeed)*fireDriftDistance;
+			*/
+			}
+			
+			
+
+    </script>
+</body>
+</html>

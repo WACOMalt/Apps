@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AltSpace Particle Test</title>
+<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="http://sdk.altvr.com/libs/altspace.js/0.5.3/altspace.js"></script>
+</head>
+<body>
+<script>
+
+var animationInc = 0;
+var fireCenter = new THREE.Vector3(0, -400, 0);
+var fireWidth = 200;
+var fireHeight = 10;
+var fireMaxHeight = fireCenter.y + 400;
+var fireDriftDistance = 1;
+var fireDriftSpeed = 40;
+
+var particleSize = new THREE.Vector3(2, 6, 2);
+
+function RandInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// Setup ThreeJS Scene for AltSpaceVR (Start)
+var scene = new THREE.Scene();
+var renderer = altspace.getThreeJSRenderer();
+// Setup ThreeJS Scene for AltSpaceVR (End)
+
+//Set up fire bounding box
+group = new THREE.Object3D();//create an empty container
+
+// Creation of ThreeJS Cube (Start)
+var geometry = new THREE.BoxGeometry(3, 3, 3);
+var material = new THREE.MeshBasicMaterial({color:'#ffa500'});
+var cube = new THREE.Mesh(geometry, material);
+var cube0FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube);//add a mesh with geometry to it
+//scene.add(cube);
+
+var cube1 = new THREE.Mesh(geometry, material);
+var cube1FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube1.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube1.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube1);
+//scene.add(cube1);
+
+var cube2 = new THREE.Mesh(geometry, material);
+var cube2FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube2.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube2.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube2);
+//scene.add(cube2);
+
+var cube3 = new THREE.Mesh(geometry, material);
+var cube3FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube3.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube3.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube3);
+//scene.add(cube3);
+
+var cube4 = new THREE.Mesh(geometry, material);
+var cube4FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube4.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube4.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube4);
+//scene.add(cube4);
+
+var cube5 = new THREE.Mesh(geometry, material);
+var cube5FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube5.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube5.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube5);
+//scene.add(cube5);
+
+var cube6 = new THREE.Mesh(geometry, material);
+var cube6FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube6.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube6.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube6);
+//scene.add(cube6);
+
+var cube7 = new THREE.Mesh(geometry, material);
+var cube7FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube7.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube7.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube7);
+//scene.add(cube7);
+
+var cube8 = new THREE.Mesh(geometry, material);
+var cube8FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube8.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube8.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube8);
+//scene.add(cube8);
+
+var cube9 = new THREE.Mesh(geometry, material);
+var cube9FireDriftSpeed = (RandInt((fireDriftSpeed-5), (fireDriftSpeed+5)));
+cube9.scale.set(particleSize.x, particleSize.y, particleSize.z);
+cube9.position.set(RandInt((fireCenter.x-(fireWidth/2)), (fireCenter.x+(fireWidth/2))), RandInt((fireCenter.y-(fireHeight/2)), (fireCenter.y+(fireHeight/2))), RandInt((fireCenter.z-(fireWidth/2)), (fireCenter.z+(fireWidth/2))));
+group.add(cube9);
+//scene.add(cube9);
+
+scene.add( group );//when done, add the group to the scene
+// Creation of ThreeJS Cube (End)
+
+// Start AltSpaceVR Render (Start)
+function animate() {
+	animationInc++;
+	requestAnimationFrame(animate);
+	AnimateFunction();
+	renderer.render(scene);
+}
+animate();
+// Start AltSpaceVR Render (End)
+
+function AnimateFunction() {
+	//move particles up, and reset particles when they leave the box, 
+    if (cube.position.y > fireMaxHeight) {cube.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube.position.y += 3.1;}
+	if (cube1.position.y > fireMaxHeight) {cube1.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube1.position.y += 2.6;}
+	if (cube2.position.y > fireMaxHeight) {cube2.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube2.position.y += 2.5;}
+	if (cube3.position.y > fireMaxHeight) {cube3.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube3.position.y += 2.2;}
+	if (cube4.position.y > fireMaxHeight) {cube4.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube4.position.y += 2.9;}	
+	if (cube5.position.y > fireMaxHeight) {cube5.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube5.position.y += 2.1;}
+	if (cube6.position.y > fireMaxHeight) {cube6.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube6.position.y += 2.0;}
+	if (cube7.position.y > fireMaxHeight) {cube7.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube7.position.y += 2.3;}
+	if (cube8.position.y > fireMaxHeight) {cube8.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube8.position.y += 2.32;}
+	if (cube9.position.y > fireMaxHeight) {cube9.position.y = RandInt((fireCenter.y + (fireHeight/2)),(fireCenter.y - (fireHeight/2)));} else {cube9.position.y += 2.52;}
+	
+	
+	//step the side to side animation
+	cube.position.x += Math.sin(animationInc/cube0FireDriftSpeed)*fireDriftDistance;
+	cube.position.z += Math.sin(animationInc/cube0FireDriftSpeed)*fireDriftDistance;
+	cube1.position.x += Math.sin(animationInc/cube1FireDriftSpeed)*fireDriftDistance;
+	cube1.position.z += Math.sin(animationInc/cube1FireDriftSpeed)*fireDriftDistance;
+	cube2.position.x += Math.sin(animationInc/cube2FireDriftSpeed)*fireDriftDistance;
+	cube2.position.z += Math.sin(animationInc/cube2FireDriftSpeed)*fireDriftDistance;
+	cube3.position.x += Math.sin(animationInc/cube3FireDriftSpeed)*fireDriftDistance;
+	cube3.position.z += Math.sin(animationInc/cube3FireDriftSpeed)*fireDriftDistance;
+	cube4.position.x += Math.sin(animationInc/cube4FireDriftSpeed)*fireDriftDistance;
+	cube4.position.z += Math.sin(animationInc/cube4FireDriftSpeed)*fireDriftDistance;
+	cube5.position.x += Math.sin(animationInc/cube5FireDriftSpeed)*fireDriftDistance;
+	cube5.position.z += Math.sin(animationInc/cube5FireDriftSpeed)*fireDriftDistance;
+	cube6.position.x += Math.sin(animationInc/cube6FireDriftSpeed)*fireDriftDistance;
+	cube6.position.z += Math.sin(animationInc/cube6FireDriftSpeed)*fireDriftDistance;
+	cube7.position.x += Math.sin(animationInc/cube7FireDriftSpeed)*fireDriftDistance;
+	cube7.position.z += Math.sin(animationInc/cube7FireDriftSpeed)*fireDriftDistance;
+	cube8.position.x += Math.sin(animationInc/cube8FireDriftSpeed)*fireDriftDistance;
+	cube8.position.z += Math.sin(animationInc/cube8FireDriftSpeed)*fireDriftDistance;
+	cube9.position.x += Math.sin(animationInc/cube9FireDriftSpeed)*fireDriftDistance;
+	cube9.position.z += Math.sin(animationInc/cube9FireDriftSpeed)*fireDriftDistance;
+	}
+
+</script>
+</body>
+</html> 
