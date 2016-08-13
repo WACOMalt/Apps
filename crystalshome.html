@@ -13,7 +13,6 @@ var models = ["doortall", "water", "flooring", "litterbox", "litter", "flooringc
 	"htfloorbedroom", "pooldonut", "ducky", "shots"
 ];
 var animateTick = 0;
-//var poolDonutBasePosition = [0, 0, 0];
 var poolDonutBasePosition = [-4.924, -2.635, 7.806];
 var duckyBasePosition = [-5.5, -2.636, 1.349];
 var sceneloaded = false;
@@ -21,7 +20,6 @@ var repeats = 0;
 var frame = 0;
 var on = 3.9782;
 var off = -1000;
-var onOrOff = [];
 var shotsLoop = new Audio("shots.ogg");
 shotsLoop.volume = 0.5;
 
@@ -190,6 +188,7 @@ function main(){
 				value = snapshot.val(); 
 				if (!value) return;
 				if (value == true){
+					shotsLoop.play();
 					doShots();
 					setTimeout(turnOff, 8000);
 				};
@@ -202,7 +201,6 @@ function main(){
 
 	function doShots(){
 		timer = Date.now();
-		if(repeats == 0) shotsLoop.play();
 		if(frame == 0){loopstart = Date.now(); frame=1;};
 		if(frame == 1){onOrOff = [off, on, on, on, off, off]; if(timer >= loopstart+380)frame=2;
 		}else if(frame == 2){onOrOff = [on, on, on, off, off, off];	if(timer >= loopstart+480)frame=3;
