@@ -10,7 +10,8 @@ var sim = altspace.utilities.Simulation();
 var config = { authorId: "evildoer", appId: "Crystal", baseRefUrl: "https://crystal-6afc1.firebaseio.com/"};
 var sceneSync;
 var models = ["doortall", "water", "flooring", "litterbox", "litter", "flooringcap", "stairs",
-	"htfloorbedroom", "pooldonut", "ducky", "shots"
+	"htfloorbedroom", "pooldonut", "ducky", "shots", "foxtail0", "foxtail1", "foxtail2", "foxtail3", 
+	"foxtail4", "foxtail5", "foxtail6", "foxtail7", 
 ];
 var animateTick = 0;
 var poolDonutBasePosition = [-4.924, -2.635, 7.806];
@@ -22,12 +23,14 @@ var on = 3.9782;
 var off = -1000;
 var shotsLoop = new Audio("shots.ogg");
 shotsLoop.volume = 0.5;
+var tailSpeed = 0.05;
 
 (function setup(){
 	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
 		sim.scene.add(skeleton);
 		headTrack = skeleton.getJoint("Head");
 		neckTrack = skeleton.getJoint("Neck");
+		hipsTrack = skeleton.getJoint("Hips");
 		altspace.getEnclosure().then(function(enclosure){
 			ppm = enclosure.pixelsPerMeter;
 			sim.scene.scale.set(ppm,ppm,ppm);
@@ -126,6 +129,51 @@ function main(){
 		sim.scene.add(ducky = loadRequest.objects[9]);
 		ducky.position.set(duckyBasePosition[0], duckyBasePosition[1], duckyBasePosition[2]);
 		console.log("added ducky");
+		
+		//Load Tail stuff
+		tailBaseGroup = new THREE.Object3D();
+		tailRotateGroup0 = new THREE.Object3D();
+		tailRotateGroup1 = new THREE.Object3D();
+		tailRotateGroup2 = new THREE.Object3D();
+		tailRotateGroup3 = new THREE.Object3D();
+		tailRotateGroup4 = new THREE.Object3D();
+		tailRotateGroup5 = new THREE.Object3D();
+		tailRotateGroup6 = new THREE.Object3D();
+		tailRotateGroup6.add(foxtail7 = loadRequest.objects[18]);
+		tailRotateGroup6.add(foxtail6 = loadRequest.objects[17]);
+		tailRotateGroup5.add(foxtail5 = loadRequest.objects[16]);
+		tailRotateGroup5.add(tailRotateGroup6);
+		tailRotateGroup4.add(foxtail4 = loadRequest.objects[15]);
+		tailRotateGroup4.add(tailRotateGroup5);
+		tailRotateGroup3.add(foxtail3 = loadRequest.objects[14]);
+		tailRotateGroup3.add(tailRotateGroup4);
+		tailRotateGroup2.add(foxtail2 = loadRequest.objects[13]);
+		tailRotateGroup2.add(tailRotateGroup3);
+		tailRotateGroup1.add(foxtail1 = loadRequest.objects[12]);
+		tailRotateGroup1.add(tailRotateGroup2);
+		tailRotateGroup0.add(foxtail0 = loadRequest.objects[11]);
+		tailRotateGroup0.add(tailRotateGroup1);
+		tailBaseGroup.add(tailRotateGroup0);
+		sim.scene.add(tailBaseGroup);
+		
+		tailBaseGroup.position.set(0, -1.3, 0);
+		tailRotateGroup0.position.set(0, 0, 0.076);
+		tailRotateGroup1.position.set(0.002, 0, 0.029);
+		tailRotateGroup2.position.set(0, 0, 0.051);
+		tailRotateGroup3.position.set(0, 0, 0.080);
+		tailRotateGroup4.position.set(0, 0, 0.082);
+		tailRotateGroup5.position.set(0, 0, 0.163);
+		tailRotateGroup6.position.set(0, 0, 0.163);
+		foxtail7.position.set(0, 0, 0.144);
+		tailRotateGroup0.rotation.x = THREE.Math.degToRad(12);
+		tailRotateGroup1.rotation.x = THREE.Math.degToRad(24);
+		tailRotateGroup2.rotation.x = THREE.Math.degToRad(30);
+		tailRotateGroup3.rotation.x = THREE.Math.degToRad(0);
+		tailRotateGroup4.rotation.x = THREE.Math.degToRad(-15);
+		tailRotateGroup5.rotation.x = THREE.Math.degToRad(-27);
+		tailRotateGroup6.rotation.x = THREE.Math.degToRad(-35);
+		foxtail7.rotation.x = THREE.Math.degToRad(14);
+	
 		
 		sceneloaded = true;
 		console.log("Model loading complete");
@@ -240,7 +288,7 @@ function main(){
 	
 	var sphereGeo1 = new THREE.SphereGeometry(400, 20, 20);
 	var sphereMaterial1 = new THREE.MeshBasicMaterial( { 
-		map: THREE.ImageUtils.loadTexture( "models/mountainSnow1.jpg" ), 
+		map: THREE.ImageUtils.loadTexture( "models/skysphere.jpg" ), 
 		//opacity: 0.8,
 		//transparent : true, 
 		side: THREE.BackSide } );
@@ -278,6 +326,15 @@ function main(){
 			waterMat.map.offset.y = Math.sin(animateTick/239)*0.1;
 			watercausticsMat.map.offset.x = Math.sin(animateTick/220)*-0.2;
 			watercausticsMat.map.offset.y = Math.sin(animateTick/200)*-0.2;
+			tailRotateGroup0.rotation.y = Math.sin((animateTick-000)/50)/5;
+			tailRotateGroup1.rotation.y = Math.sin((animateTick-050)/50)/4.5;
+			tailRotateGroup2.rotation.y = Math.sin((animateTick-100)/50)/4
+			tailRotateGroup3.rotation.y = Math.sin((animateTick-150)/25)/3.5;
+			tailRotateGroup4.rotation.y = Math.sin((animateTick-200)/25)/3;
+			tailRotateGroup5.rotation.y = Math.sin((animateTick-250)/50)/2;
+			tailRotateGroup6.rotation.y = Math.sin((animateTick-300)/50)/2;
+			foxtail7.rotation.y = 0;
+			
 			//sphereMesh1.rotation.x += -0.0195;
 			//sphereMesh1.rotation.y += -0.0165;
 			//sphereMesh1.rotation.z += -0.0155;
