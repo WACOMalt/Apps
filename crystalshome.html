@@ -24,10 +24,19 @@ var shotsLoop = new Audio("shots.ogg");
 shotsLoop.volume = 0.5;
 
 (function setup(){
-	altspace.getEnclosure().then(function(enclosure){
-		scale = enclosure.pixelsPerMeter;
-		sim.scene.scale.set(scale,scale,scale);
-		main();
+	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
+		sim.scene.add(skeleton);
+		headTrack = skeleton.getJoint("Head");
+		neckTrack = skeleton.getJoint("Neck");
+		altspace.getEnclosure().then(function(enclosure){
+			ppm = enclosure.pixelsPerMeter;
+			sim.scene.scale.set(ppm,ppm,ppm);
+			altspace.getUser().then(function(result){
+				userId = result.userId;
+				displayName = result.displayName;
+				main();
+			});
+		});
 	});
 })();
 
@@ -183,18 +192,23 @@ function main(){
 		awake: function (object3d) {
 			var sync = object3d.getBehaviorByType('Object3DSync');
 			clickRef = sync.dataRef.child('activate');
-			function turnOff(){clickRef.set(false)};
+			function turnOff(){clickRef.set("stop")};
 			clickRef.on('value', function (snapshot) {
 				value = snapshot.val(); 
 				if (!value) return;
-				if (value == true){
+				if (value == "playWithSound"){
 					shotsLoop.play();
 					doShots();
 					setTimeout(turnOff, 8000);
 				};
+				if (value == "play"){
+					doShots();
+					setTimeout(turnOff, 8000);
+				};				
 			});
 			object3d.addEventListener('cursordown', function() {
-					clickRef.set(true);
+					if(displayName == "Crystal") clickRef.set("playWithSound")
+					else clickRef.set("play");
 			});
 		}
 	};
