@@ -156,7 +156,7 @@ function main(){
 		tailBaseGroup.add(tailRotateGroup0);
 		sim.scene.add(tailBaseGroup);
 		
-		tailBaseGroup.position.set(0, -1.3, 0);
+		tailBaseGroup.position.set(0, -1.5, 0);
 		tailRotateGroup0.position.set(0, 0, 0.076);
 		tailRotateGroup1.position.set(0.002, 0, 0.029);
 		tailRotateGroup2.position.set(0, 0, 0.051);
@@ -333,7 +333,7 @@ function main(){
 			tailRotateGroup4.rotation.y = Math.sin((animateTick-200)/25)/3;
 			tailRotateGroup5.rotation.y = Math.sin((animateTick-250)/50)/2;
 			tailRotateGroup6.rotation.y = Math.sin((animateTick-300)/50)/2;
-			foxtail7.rotation.y = 0;
+			foxtail7.rotation.y = Math.sin((animateTick-300)/50)/1;
 			
 			//PLACEHOLDER FOR TAIL ATTACHMENT
 			
