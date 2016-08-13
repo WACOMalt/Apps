@@ -3,10 +3,10 @@
 <head>
 <meta charset=utf-8>
 <title>Cake</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
-<script src="http://wacomalt.com/altvr/dist/altspace.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="../dist/altspace.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
 </head>
 <body>
     <script>
@@ -42,7 +42,7 @@
                 var multiloader = altspace.utilities.multiloader;
                 multiloader.init({
                     crossOrigin: 'anonymous',
-                    baseUrl: 'http://wacomalt.com/altvr/models/',
+                    baseUrl: 'models/',
                     TRACE: true//enable for debugging logs
                 });
                 loadRequest = new multiloader.LoadRequest();
