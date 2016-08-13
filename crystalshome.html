@@ -1,13 +1,9 @@
-<html>
-<head>
-<title>Crystal's Corner</title>
+<html><head><title>Crystal's Room</title>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
 <script src="http://wacomalt.com/altvr/dist/altspace.min.js"></script>
-</head>
-<body>
-<script>
+</head><body><script>
 if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 
 var sim = altspace.utilities.Simulation();
@@ -29,17 +25,16 @@ var onOrOff = [];
 var shotsLoop = new Audio("shots.ogg");
 shotsLoop.volume = 0.5;
 
-// a function in brackets is self invoking. it will run first
 (function setup(){
 	altspace.getEnclosure().then(function(enclosure){
 		scale = enclosure.pixelsPerMeter;
 		sim.scene.scale.set(scale,scale,scale);
-		main(); // .then is called once it has the enclosure info. so we move onto main() once it has the pixels per meter
+		main();
 	});
 })();
 
 function main(){
-	(function loadModels(){ // another self invoking function. will load the models first
+	(function loadModels(){
 		var multiloader = altspace.utilities.multiloader;
 		multiloader.init({baseUrl: "models/"});
 		loadRequest = new multiloader.LoadRequest();
@@ -47,10 +42,10 @@ function main(){
 			loadRequest.objUrls.push(name + ".obj");
 			loadRequest.mtlUrls.push(name + ".mtl");
 		});
-		multiloader.load(loadRequest, onLoaded); //once the loading is finished, onLoaded is called
+		multiloader.load(loadRequest, onLoaded);
 	})();
 	
-	function onLoaded(){ // every element in the models array can be given a name and set up here
+	function onLoaded(){
 		console.log("loading models complete, running onLoaded");
 		sim.scene.add(doorEXIT = loadRequest.objects[0]);
 		doorEXIT.position.set(5.76, -1.739, -5.08);
@@ -70,42 +65,24 @@ function main(){
 		console.log("added doorEXIT2");
 		
 		sim.scene.add(water = loadRequest.objects[1]);
+		waterMat = water.children[1].material;
+		waterMat.map.repeat = new THREE.Vector2(4,4);
+		waterMat.opacity = 0.3;
+		waterMat.transparent = true;		
 		console.log("added water");
+
 		watercaustics = water.clone();
 		sim.scene.add(watercaustics);
 		watercaustics.position.set(0, -0.9, 0);
+		watercausticsMat = new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("models/waterbottom.png"),
+			transparent: true, opacity: 0.2
+		});
+		watercausticsMat.map.wrapT = THREE.RepeatWrapping;
+		watercausticsMat.map.wrapS = THREE.RepeatWrapping;
+		watercausticsMat.map.repeat = new THREE.Vector2(4,4);
+		watercaustics.children[1].material = watercausticsMat;
 		console.log("added watercaustics");
 		
-		//Create Texture object and Material for manual animation of water surface
-		var waterSurfaceTexture = new THREE.TextureLoader().load( "models/water.png" );
-			waterSurfaceTexture.wrapS = THREE.RepeatWrapping;
-			waterSurfaceTexture.wrapT = THREE.RepeatWrapping;
-			waterSurfaceTexture.repeat.set( 4, 4 );
-		var waterSurfaceMat = new THREE.MeshBasicMaterial( {map: waterSurfaceTexture} );
-		console.log("created waterSurface material");
-		
-		//Create Texture object and Material for manual animation of water caustics
-		var waterCausticsTexture = new THREE.TextureLoader().load( "models/waterbottom.png" );
-			waterCausticsTexture.wrapS = THREE.RepeatWrapping;
-			waterCausticsTexture.wrapT = THREE.RepeatWrapping;
-			waterCausticsTexture.repeat.set( 4, 4 );
-		var waterCausticsMat = new THREE.MeshBasicMaterial( {map: waterSurfaceTexture} );
-		console.log("created waterCaustics material");
-		
-		water.children[1].material = waterSurfaceMat;
-		water.children[1].material.map.repeat.height = 4;
-		water.children[1].material.map.repeat.width = 4;
-		water.children[1].material.opacity = 0.2;
-		water.children[1].material.transparent = true;
-		console.log("assigned waterSurface Material to waterSurface");
-		
-		watercaustics.children[1].material = waterCausticsMat;
-		watercaustics.children[1].material.map.repeat.height = 5;
-		watercaustics.children[1].material.map.repeat.width = 5;
-		watercaustics.children[1].material.opacity = 0.2;
-		watercaustics.children[1].material.transparent = true;
-		console.log("assigned waterCaustics Material to waterCaustics");
-				
 		sim.scene.add(flooring = loadRequest.objects[2]);
 		flooring.children[1].material.map.repeat.height = 3;
 		flooring.children[1].material.map.repeat.width = 3;
@@ -147,17 +124,12 @@ function main(){
 		console.log("Model loading complete");
 		
 		function drawNeon(file, wd, ht, x, y, z, deg, opa){
-			var geometry = new THREE.PlaneGeometry(wd, ht);
-			var material = new THREE.MeshBasicMaterial({opacity: opa, transparent: true});
-			var plane = new THREE.Mesh(geometry, material);
+			var plane = new THREE.Mesh(new THREE.PlaneGeometry(wd, ht), new THREE.MeshBasicMaterial({opacity: opa, transparent: true}));
 			plane.name = file;
 			plane.position.set(x, y, z);
 			plane.rotation.y = THREE.Math.degToRad(deg);
 			sim.scene.add(plane); //add the plane before textures load
-			var loader = new THREE.TextureLoader();
-			loader.load("./models/" + file + ".png", function(texture){
-				plane.material.map = texture;
-			});
+			new THREE.TextureLoader().load("./models/" + file + ".png", function(texture){plane.material.map = texture;});
 		};
 		
 		drawNeon("neonOrange", 2.1767, 0.5272, 7.20, 1.1211, 3.9782, -90, 0.3);
@@ -192,27 +164,21 @@ function main(){
 	function sync(){
 		altspace.utilities.sync.connect(config).then(function(connection) {
 			sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
-				instantiators: {'ShotModel': loadShotModel }, 
-				ready: ready
+				instantiators: {'ShotModel': loadShotModel }, ready: ready
 			});
 		sim.scene.addBehavior(sceneSync);
 		});
 	};
 	
 	function loadShotModel(){
-		var shots = loadRequest.objects[10]; // if you add more objects, make sure they start at 11
-		shots.addBehaviors(
-			altspace.utilities.behaviors.Object3DSync(),
-			shotsBehavior
-		);
+		var shots = loadRequest.objects[10];
+		shots.addBehaviors(altspace.utilities.behaviors.Object3DSync(), shotsBehavior);
 		sim.scene.add(shots);
 		return shots;
 	};
 	
 	function ready(firstInstance) {
-		if (firstInstance) {
-			sceneSync.instantiate('ShotModel');
-		};
+		if(firstInstance){sceneSync.instantiate("ShotModel")};
 	};
 	
 	var shotsBehavior = {
@@ -237,61 +203,26 @@ function main(){
 	function doShots(){
 		timer = Date.now();
 		if(repeats == 0) shotsLoop.play();
-		if(frame == 0){
-			loopstart = Date.now();
-			frame=1;
-		};
-		if(frame == 1){ //orange on
-			onOrOff = [off, on, on, on, off, off];
-			if(timer >= loopstart+380)frame=2;
-		}else if(frame == 2){ //all off
-			onOrOff = [on, on, on, off, off, off];
-			if(timer >= loopstart+480)frame=3;
-		}else if(frame == 3){ //purple on
-			onOrOff = [on, off, on, off, on, off];
-			if(timer >= loopstart+850)frame=4;
-		}else if(frame == 4){ //all off
-			onOrOff = [on, on, on, off, off, off];
-			if(timer >= loopstart+950)frame=5;
-		}else if(frame == 5){ // green on
-			onOrOff = [on, on, off, off, off, on];
-			if(timer >= loopstart+1200)frame=6;
-		}else if(frame == 6){ // all off
-			onOrOff = [on, on, on, off, off, off];
-			if(timer >= loopstart+1300)frame=7;
-		}else if(frame == 7){ // all on
-			onOrOff = [off, off, off, on, on, on];				
-			if(timer >= loopstart+1552)frame=8;
-		}else if(frame == 8){ // all off
-			onOrOff = [on, on, on, off, off, off];				
-			if(timer >= loopstart+1652)frame=9;
-		}else if(frame == 9){ // all on
-			onOrOff = [off, off, off, on, on, on];		
-			if(timer >= loopstart+1767)frame=10;
-		}else if(frame == 10){ // all off
-			onOrOff = [on, on, on, off, off, off];	
-			if(timer >= loopstart+1867)frame=11;
-		}else if(frame == 11){
-			frame=0;
-			repeats++;
-		};
+		if(frame == 0){loopstart = Date.now(); frame=1;};
+		if(frame == 1){onOrOff = [off, on, on, on, off, off]; if(timer >= loopstart+380)frame=2;
+		}else if(frame == 2){onOrOff = [on, on, on, off, off, off];	if(timer >= loopstart+480)frame=3;
+		}else if(frame == 3){onOrOff = [on, off, on, off, on, off];	if(timer >= loopstart+850)frame=4;
+		}else if(frame == 4){onOrOff = [on, on, on, off, off, off];	if(timer >= loopstart+950)frame=5;
+		}else if(frame == 5){onOrOff = [on, on, off, off, off, on];	if(timer >= loopstart+1200)frame=6;
+		}else if(frame == 6){onOrOff = [on, on, on, off, off, off]; if(timer >= loopstart+1300)frame=7;
+		}else if(frame == 7){onOrOff = [off, off, off, on, on, on];	if(timer >= loopstart+1552)frame=8;
+		}else if(frame == 8){onOrOff = [on, on, on, off, off, off];	if(timer >= loopstart+1652)frame=9;
+		}else if(frame == 9){onOrOff = [off, off, off, on, on, on];	if(timer >= loopstart+1767)frame=10;
+		}else if(frame == 10){onOrOff = [on, on, on, off, off, off]; if(timer >= loopstart+1867)frame=11;
+		}else if(frame == 11){frame=0; repeats++;};
 		if(repeats < 3)requestAnimationFrame(doShots);
-		else{ 
-			repeats = 0;
-			onOrOff = [off, off, off, on, on, on];
-		};
-		neonTube1.position.z = onOrOff[0];
-		shadow1.position.z = onOrOff[0];
-		neonTube2.position.z = onOrOff[1];
-		shadow2.position.z = onOrOff[1];
-		neonTube3.position.z = onOrOff[2];
-		shadow3.position.z = onOrOff[2];
-		neonOrange.position.z = onOrOff[3];
-		orangeGlow.position.z = onOrOff[3];
-		neonPurple.position.z = onOrOff[4];
-		purpleGlow.position.z = onOrOff[4];
-		neonGreen.position.z = onOrOff[5];
-		greenGlow.position.z = onOrOff[5];
+		else{repeats = 0; onOrOff = [off, off, off, on, on, on];};
+		neonTube1.position.z = onOrOff[0]; shadow1.position.z = onOrOff[0];
+		neonTube2.position.z = onOrOff[1]; shadow2.position.z = onOrOff[1];
+		neonTube3.position.z = onOrOff[2]; shadow3.position.z = onOrOff[2];
+		neonOrange.position.z = onOrOff[3]; orangeGlow.position.z = onOrOff[3];
+		neonPurple.position.z = onOrOff[4]; purpleGlow.position.z = onOrOff[4];
+		neonGreen.position.z = onOrOff[5]; greenGlow.position.z = onOrOff[5];
 		if(repeats == 0)return;
 	};
 	
@@ -331,10 +262,10 @@ function main(){
 			ducky.position.x = (duckyBasePosition[0] + (Math.sin(animateTick/230)*-0.1));
 			ducky.position.y = (duckyBasePosition[1] + (Math.sin(animateTick/6.3)*0.00625));
 			ducky.position.z = (duckyBasePosition[2] + (Math.sin(animateTick/230)*0.2));
-			water.children[1].material.map.offset.x = Math.sin(animateTick/200)*0.1;
-			water.children[1].material.map.offset.y = Math.sin(animateTick/239)*0.1;
-			watercaustics.children[1].material.map.offset.x = Math.sin(animateTick/220)*-0.2;
-			watercaustics.children[1].material.map.offset.y = Math.sin(animateTick/200)*-0.2;
+			waterMat.map.offset.x = Math.sin(animateTick/200)*0.1;
+			waterMat.map.offset.y = Math.sin(animateTick/239)*0.1;
+			watercausticsMat.map.offset.x = Math.sin(animateTick/220)*-0.2;
+			watercausticsMat.map.offset.y = Math.sin(animateTick/200)*-0.2;
 			//sphereMesh1.rotation.x += -0.0195;
 			//sphereMesh1.rotation.y += -0.0165;
 			//sphereMesh1.rotation.z += -0.0155;
@@ -346,5 +277,4 @@ function main(){
 </script>
 <a id="doorEXIT" href="altspace://account.altvr.com/api/events/478264491759370953"></a></div>
 <a id="doorEXIT2" href="altspace://account.altvr.com/api/spaces/the-welcome-space"></a></div>
-</body>
-</html>
+</body></html>
