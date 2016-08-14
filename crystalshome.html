@@ -12,7 +12,7 @@ var config = { authorId: "evildoer", appId: "Crystal", baseRefUrl: "https://crys
 var sceneSync;
 var models = ["doortall", "water", "flooring", "litterbox", "litter", "flooringcap", "stairs",
 	"htfloorbedroom", "pooldonut", "ducky", "shots", "foxtail0", "foxtail1", "foxtail2", "foxtail3", 
-	"foxtail4", "foxtail5", "foxtail6", "foxtail7", 
+	"foxtail4", "foxtail5", "foxtail6", "foxtail7", "fox",
 ];
 var animateTick = 0;
 var poolDonutBasePosition = [-4.924, -2.635, 7.806];
@@ -22,7 +22,7 @@ var repeats = 0;
 var frame = 0;
 var on = 3.9782;
 var off = -1000;
-var tailSpeed = 0.05;
+var tailSpeed = 50;
 var shotsLoop = new Howl({src: ['shots.ogg'], volume: 0.5});
 
 (function setup(){
@@ -160,7 +160,7 @@ function main(){
 		foxtail6.rotation.x = THREE.Math.degToRad(-35);
 		foxtail7.rotation.x = THREE.Math.degToRad(14);
 	
-				sceneloaded = true;
+		sceneloaded = true;
 		console.log("Model loading complete");
 		
 		function drawNeon(file, wd, ht, x, y, z, deg, opa){
@@ -334,14 +334,14 @@ function main(){
 			waterMat.map.offset.y = Math.sin(animateTick/239)*0.1;
 			watercausticsMat.map.offset.x = Math.sin(animateTick/220)*-0.2;
 			watercausticsMat.map.offset.y = Math.sin(animateTick/200)*-0.2;
-			foxtail0.rotation.y = Math.sin((animateTick-000)/50)/5;
-			foxtail1.rotation.y = Math.sin((animateTick-050)/50)/4.5;
-			foxtail2.rotation.y = Math.sin((animateTick-100)/50)/4
-			foxtail3.rotation.y = Math.sin((animateTick-150)/25)/3.5;
-			foxtail4.rotation.y = Math.sin((animateTick-200)/25)/3;
-			foxtail5.rotation.y = Math.sin((animateTick-250)/50)/2;
-			foxtail6.rotation.y = Math.sin((animateTick-300)/50)/2;
-			foxtail7.rotation.y = Math.sin((animateTick-300)/50)/1;
+			foxtail0.rotation.y = Math.sin((animateTick-00)/tailSpeed)/4;
+			foxtail1.rotation.y = Math.sin((animateTick-30)/tailSpeed)/4;
+			foxtail2.rotation.y = Math.sin((animateTick-60)/tailSpeed)/4
+			foxtail3.rotation.y = Math.sin((animateTick-90)/tailSpeed)/4;
+			foxtail4.rotation.y = Math.sin((animateTick-120)/tailSpeed)/2;
+			foxtail5.rotation.y = Math.sin((animateTick-150)/tailSpeed)/2;
+			foxtail6.rotation.y = Math.sin((animateTick-180)/tailSpeed)/3;
+			foxtail7.rotation.y = Math.sin((animateTick-210)/tailSpeed)/6;
 			
 			//PLACEHOLDER FOR TAIL ATTACHMENT
 			
