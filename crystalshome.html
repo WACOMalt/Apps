@@ -3,6 +3,7 @@
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
 <script src="http://wacomalt.com/altvr/dist/altspace.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.0/howler.min.js"></script>
 </head><body><script>
 if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 
@@ -21,9 +22,14 @@ var repeats = 0;
 var frame = 0;
 var on = 3.9782;
 var off = -1000;
+<<<<<<< HEAD
 var shotsLoop = new Audio("shots.ogg");
 shotsLoop.volume = 0.5;
 var tailSpeed = 0.05;
+=======
+var tailSpeed = 0.05;
+var shotsLoop = new Howl({src: ['shots.ogg'], volume: 0.5});
+>>>>>>> evildoer
 
 (function setup(){
 	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
@@ -255,8 +261,11 @@ function main(){
 				};				
 			});
 			object3d.addEventListener('cursordown', function() {
-					if(displayName == "Crystal") clickRef.set("playWithSound")
-					else clickRef.set("play");
+					if(!value || value == "stop"){
+						if(displayName == "Crystal") clickRef.set("playWithSound")
+						else clickRef.set("play");
+						
+					};
 			});
 		}
 	};
@@ -306,6 +315,26 @@ function main(){
 	sphereMesh2 = new THREE.Mesh(sphereGeo2, sphereMaterial2);
 	sim.scene.add(sphereMesh2);
 */
+
+	function DrawPic(file, wd, ht, posX, posY, posZ, deg){
+		new THREE.TextureLoader().load("images/" + file + ".jpg", function(tex){ //change folder with pictures here
+			var pic = new THREE.Mesh(new THREE.PlaneGeometry(wd, ht), new THREE.MeshBasicMaterial({map: tex}));
+			pic.position.set(posX, posY, posZ);
+			pic.rotation.y = THREE.Math.degToRad(deg);
+			sim.scene.add(pic);
+		});
+	};
+	
+	//jpeg filename     wd.   ht.  pos x  pos y   pos z  rot deg
+	DrawPic("Crystal2016-07-18_21-50-42", 2.27, 0.76,  8.20,  0.56,   3.98,  90);    //above fireplace east
+	DrawPic("Crystal2016-08-05_22-23-55", 1.19, 0.68, -0.25, -2.00, -11.10, -90);    //fireplace island west 1
+	DrawPic("Crystal2016-07-01_21-11-33", 1.19, 0.68, -0.25, -2.00,  -8.84, -90);    //fireplace island west 2
+	DrawPic("Crystal2016-07-09_11-39-12", 1.40, 0.79, 10.84,  0.28,  -7.82,  41.03); //fireplace island east top
+	DrawPic("Crystal2016-05-28_03-19-45", 1.40, 0.79, 10.84, -0.81,  -7.82,  41.03); //fireplace island east bottom
+	DrawPic("Crystal2016-06-08_19-04-58", 2.20, 1.24, 16.34, -0.46,   0.34,  90);    //theater
+	DrawPic("Crystal2016-07-29_22-01-42", 1.19, 0.67, 14.58, -1.18,   6.45, -90);    //east wall 1
+	DrawPic("Crystal2016-07-23_18-16-44", 1.19, 0.67, 14.58, -1.18,   8.02, -90);    //east wall 2
+	DrawPic("Crystal2016-07-11_19-36-02", 1.19, 0.67, 14.58, -1.18,   9.59, -90);    //east wall 3
 
 	function animate() {
 		requestAnimationFrame(animate);
