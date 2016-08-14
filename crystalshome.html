@@ -138,46 +138,32 @@ function main(){
 		
 		//Load Tail stuff
 		tailBaseGroup = new THREE.Object3D();
-		tailRotateGroup0 = new THREE.Object3D();
-		tailRotateGroup1 = new THREE.Object3D();
-		tailRotateGroup2 = new THREE.Object3D();
-		tailRotateGroup3 = new THREE.Object3D();
-		tailRotateGroup4 = new THREE.Object3D();
-		tailRotateGroup5 = new THREE.Object3D();
-		tailRotateGroup6 = new THREE.Object3D();
-		tailRotateGroup6.add(foxtail7 = loadRequest.objects[18]);
-		tailRotateGroup6.add(foxtail6 = loadRequest.objects[17]);
-		tailRotateGroup5.add(foxtail5 = loadRequest.objects[16]);
-		tailRotateGroup5.add(tailRotateGroup6);
-		tailRotateGroup4.add(foxtail4 = loadRequest.objects[15]);
-		tailRotateGroup4.add(tailRotateGroup5);
-		tailRotateGroup3.add(foxtail3 = loadRequest.objects[14]);
-		tailRotateGroup3.add(tailRotateGroup4);
-		tailRotateGroup2.add(foxtail2 = loadRequest.objects[13]);
-		tailRotateGroup2.add(tailRotateGroup3);
-		tailRotateGroup1.add(foxtail1 = loadRequest.objects[12]);
-		tailRotateGroup1.add(tailRotateGroup2);
-		tailRotateGroup0.add(foxtail0 = loadRequest.objects[11]);
-		tailRotateGroup0.add(tailRotateGroup1);
-		tailBaseGroup.add(tailRotateGroup0);
+		tailBaseGroup.add(foxtail0 = loadRequest.objects[11]);
+		foxtail0.add(foxtail1 = loadRequest.objects[12]);
+		foxtail1.add(foxtail2 = loadRequest.objects[13]);
+		foxtail2.add(foxtail3 = loadRequest.objects[14]);
+		foxtail3.add(foxtail4 = loadRequest.objects[15]);
+		foxtail4.add(foxtail5 = loadRequest.objects[16]);
+		foxtail5.add(foxtail6 = loadRequest.objects[17]);
+		foxtail6.add(foxtail7 = loadRequest.objects[18]);
 		sim.scene.add(tailBaseGroup);
 		
-		tailBaseGroup.position.set(0, -1.5, 0);
-		tailRotateGroup0.position.set(0, 0, 0.076);
-		tailRotateGroup1.position.set(0.002, 0, 0.029);
-		tailRotateGroup2.position.set(0, 0, 0.051);
-		tailRotateGroup3.position.set(0, 0, 0.080);
-		tailRotateGroup4.position.set(0, 0, 0.082);
-		tailRotateGroup5.position.set(0, 0, 0.163);
-		tailRotateGroup6.position.set(0, 0, 0.163);
-		foxtail7.position.set(0, 0, 0.144);
-		tailRotateGroup0.rotation.x = THREE.Math.degToRad(12);
-		tailRotateGroup1.rotation.x = THREE.Math.degToRad(24);
-		tailRotateGroup2.rotation.x = THREE.Math.degToRad(30);
-		tailRotateGroup3.rotation.x = THREE.Math.degToRad(0);
-		tailRotateGroup4.rotation.x = THREE.Math.degToRad(-15);
-		tailRotateGroup5.rotation.x = THREE.Math.degToRad(-27);
-		tailRotateGroup6.rotation.x = THREE.Math.degToRad(-35);
+		tailBaseGroup.position.set(0.000, -1.500, 0.000);
+		foxtail0.position.set(0.000, 0.000, 0.076);
+		foxtail1.position.set(0.002, 0.000, 0.029);
+		foxtail2.position.set(0.000, 0.000, 0.051);
+		foxtail3.position.set(0.000, 0.000, 0.080);
+		foxtail4.position.set(0.000, 0.000, 0.082);
+		foxtail5.position.set(0.000, 0.000, 0.163);
+		foxtail6.position.set(0.000, 0.000, 0.163);
+		foxtail7.position.set(0.000, 0.000, 0.144);
+		foxtail0.rotation.x = THREE.Math.degToRad(12);
+		foxtail1.rotation.x = THREE.Math.degToRad(24);
+		foxtail2.rotation.x = THREE.Math.degToRad(30);
+		foxtail3.rotation.x = THREE.Math.degToRad(0);
+		foxtail4.rotation.x = THREE.Math.degToRad(-15);
+		foxtail5.rotation.x = THREE.Math.degToRad(-27);
+		foxtail6.rotation.x = THREE.Math.degToRad(-35);
 		foxtail7.rotation.x = THREE.Math.degToRad(14);
 	
 		
@@ -355,13 +341,13 @@ function main(){
 			waterMat.map.offset.y = Math.sin(animateTick/239)*0.1;
 			watercausticsMat.map.offset.x = Math.sin(animateTick/220)*-0.2;
 			watercausticsMat.map.offset.y = Math.sin(animateTick/200)*-0.2;
-			tailRotateGroup0.rotation.y = Math.sin((animateTick-000)/50)/5;
-			tailRotateGroup1.rotation.y = Math.sin((animateTick-050)/50)/4.5;
-			tailRotateGroup2.rotation.y = Math.sin((animateTick-100)/50)/4
-			tailRotateGroup3.rotation.y = Math.sin((animateTick-150)/25)/3.5;
-			tailRotateGroup4.rotation.y = Math.sin((animateTick-200)/25)/3;
-			tailRotateGroup5.rotation.y = Math.sin((animateTick-250)/50)/2;
-			tailRotateGroup6.rotation.y = Math.sin((animateTick-300)/50)/2;
+			foxtail0.rotation.y = Math.sin((animateTick-000)/50)/5;
+			foxtail1.rotation.y = Math.sin((animateTick-050)/50)/4.5;
+			foxtail2.rotation.y = Math.sin((animateTick-100)/50)/4
+			foxtail3.rotation.y = Math.sin((animateTick-150)/25)/3.5;
+			foxtail4.rotation.y = Math.sin((animateTick-200)/25)/3;
+			foxtail5.rotation.y = Math.sin((animateTick-250)/50)/2;
+			foxtail6.rotation.y = Math.sin((animateTick-300)/50)/2;
 			foxtail7.rotation.y = Math.sin((animateTick-300)/50)/1;
 			
 			//PLACEHOLDER FOR TAIL ATTACHMENT
