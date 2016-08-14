@@ -12,7 +12,7 @@ var config = { authorId: "evildoer", appId: "Crystal", baseRefUrl: "https://crys
 var sceneSync;
 var models = ["doortall", "water", "flooring", "litterbox", "litter", "flooringcap", "stairs",
 	"htfloorbedroom", "pooldonut", "ducky", "shots", "foxtail0", "foxtail1", "foxtail2", "foxtail3", 
-	"foxtail4", "foxtail5", "foxtail6", "foxtail7", "bar", "kraken", "krakenglass", "krakendarkglass", "krakencap"
+	"foxtail4", "foxtail5", "foxtail6", "foxtail7", "bar", "curtain1", "curtain2", "kraken", "krakenglass", "krakendarkglass", "krakencap"
 ];
 var animateTick = 0;
 var poolDonutBasePosition = [-4.924, -2.635, 7.806];
@@ -132,11 +132,15 @@ function main(){
 		sim.scene.add(bar = loadRequest.objects[19]);
 		console.log("added bar");
 		
-		kraken = loadRequest.objects[20];
+		curtain1 = loadRequest.objects[20];
+		curtain1.add(curtain2 = loadRequest.objects[21]);
+		sim.scene.add(curtain1);
+		console.log("added curtains");
 		
-		kraken.add(krakenglass = loadRequest.objects[21]);
-		kraken.add(krakendarkglass = loadRequest.objects[22]);
-		kraken.add(krakencap = loadRequest.objects[23]);
+		kraken = loadRequest.objects[22];
+		kraken.add(krakenglass = loadRequest.objects[23]);
+		kraken.add(krakendarkglass = loadRequest.objects[24]);
+		kraken.add(krakencap = loadRequest.objects[25]);
 		sim.scene.add(kraken);
 		console.log("added kraken");
 		
