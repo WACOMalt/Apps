@@ -22,14 +22,8 @@ var repeats = 0;
 var frame = 0;
 var on = 3.9782;
 var off = -1000;
-<<<<<<< HEAD
-var shotsLoop = new Audio("shots.ogg");
-shotsLoop.volume = 0.5;
-var tailSpeed = 0.05;
-=======
 var tailSpeed = 0.05;
 var shotsLoop = new Howl({src: ['shots.ogg'], volume: 0.5});
->>>>>>> evildoer
 
 (function setup(){
 	altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
@@ -166,8 +160,7 @@ function main(){
 		foxtail6.rotation.x = THREE.Math.degToRad(-35);
 		foxtail7.rotation.x = THREE.Math.degToRad(14);
 	
-		
-		sceneloaded = true;
+				sceneloaded = true;
 		console.log("Model loading complete");
 		
 		function drawNeon(file, wd, ht, x, y, z, deg, opa){
