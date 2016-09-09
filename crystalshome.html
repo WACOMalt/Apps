@@ -10,9 +10,9 @@ if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view t
 var sim = altspace.utilities.Simulation();
 var config = { authorId: "evildoer", appId: "Crystal", baseRefUrl: "https://crystal-6afc1.firebaseio.com/"};
 var sceneSync;
-var models = ["doortall", "water", "flooring", "litterbox", "litter", "flooringcap", "stairs",
+var models = ["doorpink", "water", "flooring", "litterbox", "litter", "flooringcap", "stairs",
 	"htfloorbedroom", "pooldonut", "ducky", "shots", "foxtail0", "foxtail1", "foxtail2", "foxtail3", 
-	"foxtail4", "foxtail5", "foxtail6", "foxtail7", "bar", "curtain1", "curtain2", "kraken", "krakenglass", "krakendarkglass", "krakencap"
+	"foxtail4", "foxtail5", "foxtail6", "foxtail7", "bar", "curtain1", "curtain2", "kraken", "krakenglass", "krakendarkglass", "krakencap", "mcbed", "doorgreen", "christmaslights"
 ];
 var animateTick = 0;
 var poolDonutBasePosition = [-4.924, -2.635, 7.806];
@@ -57,21 +57,22 @@ function main(){
 	
 	function onLoaded(){
 		console.log("loading models complete, running onLoaded");
-		sim.scene.add(doorEXIT = loadRequest.objects[0]);
-		doorEXIT2 = doorEXIT.clone();
-		doorEXIT.position.set(5.76, -1.739, -5.08);
-		doorEXIT.rotation.y = THREE.Math.degToRad(130.603);
-		doorEXIT.addEventListener("cursorup", function(){
-			document.getElementById("doorEXIT").click();
+		
+		sim.scene.add(doorpink = loadRequest.objects[0]);
+		doorpink.position.set(5.76, -1.739, -5.08);
+		doorpink.rotation.y = THREE.Math.degToRad(130.603);
+		doorpink.addEventListener("cursorup", function(){
+			document.getElementById("doorpink").click();
 		});
-		console.log("added doorEXIT");
-		sim.scene.add(doorEXIT2);
-		doorEXIT2.position.set(6.574, -1.739, -3.838);
-		doorEXIT2.rotation.y = THREE.Math.degToRad(116.896);
-		doorEXIT2.addEventListener("cursorup", function(){
-			document.getElementById("doorEXIT2").click();
+		console.log("added doorpink");
+		
+		sim.scene.add(doorgreen = loadRequest.objects[27]);
+		doorgreen.position.set(6.574, -1.739, -3.838);
+		doorgreen.rotation.y = THREE.Math.degToRad(116.896);
+		doorgreen.addEventListener("cursorup", function(){
+			document.getElementById("doorgreen").click();
 		});
-		console.log("added doorEXIT2");
+		console.log("added doorgreen");
 		
 		sim.scene.add(water = loadRequest.objects[1]);
 		waterMat = water.children[1].material;
@@ -143,6 +144,21 @@ function main(){
 		kraken.add(krakencap = loadRequest.objects[25]);
 		sim.scene.add(kraken);
 		console.log("added kraken");
+		
+		mcbed = loadRequest.objects[26];
+		sim.scene.add(mcbed);
+		mcbed.position.set(7.371, -3.621, -10.396);
+		console.log("added mcbed");
+		
+		christmaslights = loadRequest.objects[28];
+		christmaslightsMat = new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("models/christmaslights.png"), transparent: true
+		});
+		christmaslightsMat.map.wrapT = THREE.RepeatWrapping;
+		christmaslightsMat.map.wrapS = THREE.RepeatWrapping;
+		sim.scene.add(christmaslights);
+		christmaslights.children[1].material = christmaslightsMat;
+		christmaslights.children[1].material.map.repeat.width = 12;
+		console.log("added christmaslights");
 		
 		//Load Tail stuff
 		tailBaseGroup = new THREE.Object3D();
@@ -369,6 +385,6 @@ function main(){
 	animate();
 };
 </script>
-<a id="doorEXIT" href="altspace://account.altvr.com/api/events/478264491759370953"></a></div>
-<a id="doorEXIT2" href="altspace://account.altvr.com/api/spaces/the-welcome-space"></a></div>
+<a id="doorpink" href="altspace://account.altvr.com/api/spaces/the-welcome-space"></a></div>
+<a id="doorgreen" href="altspace://account.altvr.com/api/events/484408954214941560"></a></div>
 </body></html>
