@@ -1,0 +1,98 @@
+#! C:/Program Files/Nuke10.0v2/nuke-10.0.2.dll -nx
+version 10.0 v2
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="0" w="1920" h="1160" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1241" stretch="1"/>
+            <splitter orientation="2">
+                <split size="642"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="452"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name "G:/Altspace Code/Apps/models/bartextureprep.nk"
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+}
+Read {
+ inputs 0
+ file "G:/Altspace Code/maya/images/polySurface4Shape.exr"
+ format "1024 1024 0 0 1024 1024 1 square_1K"
+ origset true
+ name Read1
+ xpos -270
+ ypos 83
+}
+Grade {
+ white 0.25
+ gamma {0.8999999762 0.9714285731 1 0.6999999881}
+ name Grade2
+ xpos -270
+ ypos 172
+}
+Write {
+ file "G:/Altspace Code/Apps/models/barcenter2.png"
+ file_type png
+ checkHashOnRead false
+ version 5
+ name Write2
+ xpos -270
+ ypos 223
+}
+Read {
+ inputs 0
+ file "G:/Altspace Code/maya/images/polySurfaceShape3.exr"
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ origset true
+ colorspace linear
+ name Read2
+ xpos -396
+ ypos 75
+}
+Grade {
+ white 0.4
+ gamma {0.8999999762 0.9714285731 1 0.6999999881}
+ name Grade1
+ xpos -396
+ ypos 173
+}
+set N6e34000 [stack 0]
+Viewer {
+ frame 1
+ frame_range 1-100
+ name Viewer1
+ xpos -40
+ ypos -10
+}
+push $N6e34000
+Write {
+ file "G:/Altspace Code/Apps/models/bar2.png"
+ file_type png
+ checkHashOnRead false
+ version 4
+ name Write1
+ xpos -396
+ ypos 219
+}
